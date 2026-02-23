@@ -5,55 +5,44 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+// Force error display at the highest level
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-/*
-|--------------------------------------------------------------------------
-| Check If The Application Is Under Maintenance
-|--------------------------------------------------------------------------
-|
-| If the application is in maintenance / demo mode via the "down" command
-| we will load this file so that any pre-rendered content can be shown
-| instead of starting the framework, which could cause an exception.
-|
-|
-*/
+try {
+    /*
+    |--------------------------------------------------------------------------
+    | Register The Auto Loader
+    |--------------------------------------------------------------------------
+    */
+    require __DIR__.'/../vendor/autoload.php';
 
-if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
-    require $maintenance;
+    /*
+    |--------------------------------------------------------------------------
+    | Run The Application
+    |--------------------------------------------------------------------------
+    */
+    $app = require_once __DIR__.'/../bootstrap/app.php';
+
+    $kernel = $app->make(Kernel::class);
+
+    $response = $kernel->handle(
+        $request = Request::capture()
+    );
+
+    $response->send();
+
+    $kernel->terminate($request, $response);
+
+} catch (\Throwable $e) {
+    // If anything fails, scream the error to the browser
+    header('Content-Type: text/html', true, 500);
+    echo "<html><body style='background:#f8d7da; color:#721c24; padding:20px; font-family:sans-serif;'>";
+    echo "<h1>🚨 Laravel Startup Error 🚨</h1>";
+    echo "<p><strong>Message:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p><strong>File:</strong> " . htmlspecialchars($e->getFile()) . " on line " . $e->getLine() . "</p>";
+    echo "<h2>Stack Trace:</h2>";
+    echo "<pre style='background:#fff; padding:10px; border:1px solid #ced4da; overflow:auto;'>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+    echo "</body></html>";
+    exit;
 }
-
-/*
-|--------------------------------------------------------------------------
-| Register The Auto Loader
-|--------------------------------------------------------------------------
-|
-| Composer provides a convenient, automatically generated class loader for
-| this application. We just need to utilize it! We'll simply require it
-| into the script here so we don't need to manually load our classes.
-|
-*/
-
-require __DIR__.'/../vendor/autoload.php';
-
-/*
-|--------------------------------------------------------------------------
-| Run The Application
-|--------------------------------------------------------------------------
-|
-| Once we have the application, we can handle the incoming request using
-| the application's HTTP kernel. Then, we will send the response back
-| to this client's browser, allowing them to enjoy our application.
-|
-*/
-
-$app = require_once __DIR__.'/../bootstrap/app.php';
-
-$kernel = $app->make(Kernel::class);
-
-$response = $kernel->handle(
-    $request = Request::capture()
-)->send();
-
-$kernel->terminate($request, $response);
