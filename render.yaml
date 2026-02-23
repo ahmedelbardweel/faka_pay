@@ -1,6 +1,10 @@
 services:
   - type: web
     name: faka-pay
+    runtime: docker
+    plan: free
+    startCommand: php artisan migrate --force && apache2-foreground
+    envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
