@@ -1,3 +1,12 @@
+<?php
+
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 /*
 |--------------------------------------------------------------------------
@@ -7,6 +16,7 @@
 | If the application is in maintenance / demo mode via the "down" command
 | we will load this file so that any pre-rendered content can be shown
 | instead of starting the framework, which could cause an exception.
+|
 |
 */
 
