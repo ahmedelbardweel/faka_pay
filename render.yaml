@@ -1,9 +1,6 @@
 services:
   - type: web
     name: faka-pay
-    runtime: docker
-    plan: free
-    envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
