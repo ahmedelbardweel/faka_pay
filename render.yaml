@@ -3,18 +3,10 @@ services:
     name: faka-pay
     runtime: docker
     plan: free
-    startCommand: |
-      echo "--- Starting Startup Script ---"
-      echo "Running Migrations..."
-      php artisan migrate --force || echo "Migration failed!"
-      echo "Clearing Caches..."
-      php artisan config:clear
-      php artisan cache:clear
-      echo "Starting Apache..."
-      apache2-foreground
+    startCommand: php artisan migrate --force; apache2-foreground
     envVars:
       - key: APP_ENV
-        value: local
+        value: production
       - key: APP_DEBUG
         value: true
       - key: LOG_LEVEL
