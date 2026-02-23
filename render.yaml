@@ -5,8 +5,6 @@ services:
     plan: free
     startCommand: php artisan migrate --force && apache2-foreground
     envVars:
-      - key: APP_ENV
-        value: production
       - key: DB_CONNECTION
         value: pgsql
       - key: DATABASE_URL
