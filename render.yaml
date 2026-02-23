@@ -10,11 +10,6 @@ services:
         value: production
       - key: APP_DEBUG
         value: false
-      - key: APP_KEY
-        fromService:
-          type: web
-          name: faka-pay
-          property: env:APP_KEY
       - key: DB_CONNECTION
         value: pgsql
       - key: DATABASE_URL
