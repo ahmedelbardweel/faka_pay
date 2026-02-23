@@ -3,16 +3,12 @@ services:
     name: faka-pay
     runtime: docker
     plan: free
-    startCommand: php artisan migrate --force; apache2-foreground
+    # entrypoint.sh handles migrations and cache
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
-        value: true
-      - key: LOG_LEVEL
-        value: debug
-      - key: LOG_CHANNEL
-        value: stderr
+        value: false
       - key: DB_CONNECTION
         value: pgsql
       - key: DATABASE_URL
