@@ -9,8 +9,6 @@ services:
         value: local
       - key: APP_DEBUG
         value: true
-      - key: LOG_LEVEL
-        value: debug
       - key: DB_CONNECTION
         value: pgsql
       - key: DATABASE_URL
