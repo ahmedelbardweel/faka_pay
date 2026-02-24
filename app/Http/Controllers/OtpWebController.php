@@ -32,12 +32,20 @@ class OtpWebController extends Controller
         $user = Auth::user();
         $otpCode = $this->otpService->generate($user, $action_type);
         
+        // Send Push Notification (if available)
         $this->notificationService->sendPush(
             $user->fcm_token,
             "Verification Code",
             "Your 6-digit verification code is: {$otpCode}",
             ['otp_code' => $otpCode, 'action_type' => $action_type]
         );
+
+        // Send Email
+        try {
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\OtpVerificationMail($otpCode, $user->name));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send OTP email: ' . $e->getMessage());
+        }
 
         return view('auth.otp-verify', compact('action_type', 'intended_url', 'action_data', 'otpCode'));
     }

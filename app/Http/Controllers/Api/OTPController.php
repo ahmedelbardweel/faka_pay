@@ -63,6 +63,13 @@ class OTPController extends Controller
             ['otp_code' => $otpCode, 'action_type' => $request->action_type]
         );
 
+        // Send Email
+        try {
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\OtpVerificationMail($otpCode, $user->name));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send OTP email: ' . $e->getMessage());
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'OTP sent successfully to your device',
