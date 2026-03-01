@@ -19,6 +19,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/create-admin', function () {
+    $user = \App\Models\User::firstOrNew(['email' => 'admin@example.com']);
+    $user->name = 'Admin User';
+    $user->phone = '0000000000';
+    $user->password = \Illuminate\Support\Facades\Hash::make('password');
+    $user->is_admin = true;
+    $user->email_verified_at = now();
+    $user->device_token = null; // Reset device token
+    $user->save();
+    
+    return "Admin user setup completed for: " . $user->email . ". You can now login with password: 'password'";
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
