@@ -18,6 +18,11 @@
                     <x-nav-link :href="route('wallet.index')" :active="request()->routeIs('wallet.*')">
                         {{ __('Wallet') }}
                     </x-nav-link>
+                    @if(Auth::user()->is_admin)
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        {{ __('Admin Dashboard') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -76,6 +81,11 @@
             <x-responsive-nav-link :href="route('wallet.index')" :active="request()->routeIs('wallet.*')">
                 {{ __('Wallet') }}
             </x-responsive-nav-link>
+            @if(Auth::user()->is_admin)
+            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                {{ __('Admin Dashboard') }}
+            </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
