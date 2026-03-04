@@ -49,4 +49,17 @@ class AdminController extends Controller
 
         return redirect()->back()->with('status', 'User ' . $user->name . ' has been rejected.');
     }
+
+    public function resetDevice(\App\Models\User $user)
+    {
+        // Only allow admins
+        if (!auth()->user()->is_admin) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user->device_token = null;
+        $user->save();
+
+        return redirect()->back()->with('status', 'Device reset successfully for ' . $user->name);
+    }
 }
