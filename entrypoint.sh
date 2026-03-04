@@ -6,8 +6,13 @@ set -e
 echo "--- 🚀 Launching Production Environment ---"
 
 # Ensure storage directories exist and have correct permissions
+mkdir -p storage/app/public/kyc/ids
+mkdir -p storage/app/public/kyc/personal
 mkdir -p storage/framework/{sessions,views,cache}
 chown -R www-data:www-data storage bootstrap/cache
+
+echo "--- 🔗 Linking Storage ---"
+php artisan storage:link || echo "⚠️ Storage link already exists or failed..."
 
 echo "--- 🛠️ Running Migrations ---"
 # Run migrations with a slight delay to ensure DB is ready if needed
