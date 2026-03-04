@@ -63,9 +63,10 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>User</th>
+                                        <th>User & ID</th>
+                                        <th>Status</th>
                                         <th>Balance</th>
-                                        <th>Device Lock</th>
+                                        <th>KYC Files</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -74,27 +75,51 @@
                                         <tr>
                                             <td>
                                                 <div class="font-bold text-gray-900">{{ $user->name }}</div>
-                                                <div class="text-xs text-gray-500">{{ $user->email }}</div>
+                                                <div class="text-[0.65rem] text-gray-400 font-mono">{{ $user->id_number ?? 'NO ID' }}</div>
+                                                <div class="text-[0.65rem] text-gray-500">{{ $user->email }}</div>
+                                            </td>
+                                            <td>
+                                                @if($user->status === 'approved')
+                                                    <span class="badge badge-green">Approved</span>
+                                                @elseif($user->status === 'rejected')
+                                                    <span class="badge badge-red">Rejected</span>
+                                                @else
+                                                    <span class="badge badge-gray">Pending</span>
+                                                @endif
                                             </td>
                                             <td class="font-mono font-bold text-emerald-600">
                                                 {{ number_format($user->wallet->balance ?? 0, 2) }}
                                             </td>
                                             <td>
-                                                @if ($user->device_token)
-                                                    <span class="badge badge-red">Locked</span>
+                                                @if($user->id_photo)
+                                                    <div class="flex gap-2">
+                                                        <a href="{{ Storage::url($user->id_photo) }}" target="_blank" class="text-[0.6rem] font-black text-blue-600 uppercase border border-blue-600 px-1">ID</a>
+                                                        <a href="{{ Storage::url($user->personal_photo) }}" target="_blank" class="text-[0.6rem] font-black text-purple-600 uppercase border border-purple-600 px-1">Selfie</a>
+                                                    </div>
                                                 @else
-                                                    <span class="badge badge-green">Open</span>
+                                                    <span class="text-gray-300 text-[0.6rem] font-bold uppercase">No Files</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($user->device_token)
-                                                    <form method="POST" action="{{ route('admin.device.reset', $user->id) }}">
-                                                        @csrf
-                                                        <button type="submit" class="btn-reset">Reset Lock</button>
-                                                    </form>
-                                                @else
-                                                    <span class="text-gray-300 text-xs font-bold uppercase">No Action</span>
-                                                @endif
+                                                <div class="flex flex-col gap-1">
+                                                    @if($user->status === 'pending')
+                                                        <form method="POST" action="{{ route('admin.users.approve', $user->id) }}">
+                                                            @csrf
+                                                            <button type="submit" class="text-[0.65rem] font-black text-emerald-600 uppercase hover:underline">Approve</button>
+                                                        </form>
+                                                        <form method="POST" action="{{ route('admin.users.reject', $user->id) }}">
+                                                            @csrf
+                                                            <button type="submit" class="text-[0.65rem] font-black text-red-600 uppercase hover:underline">Reject</button>
+                                                        </form>
+                                                    @endif
+                                                    
+                                                    @if ($user->device_token)
+                                                        <form method="POST" action="{{ route('admin.device.reset', $user->id) }}">
+                                                            @csrf
+                                                            <button type="submit" class="btn-reset">Reset Lock</button>
+                                                        </form>
+                                                    @endif
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach

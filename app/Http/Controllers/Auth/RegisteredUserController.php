@@ -35,13 +35,24 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'phone' => ['required', 'string', 'max:20', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'id_number' => ['required', 'string', 'unique:'.User::class],
+            'id_photo' => ['required', 'image', 'max:5120'],
+            'personal_photo' => ['required', 'image', 'max:5120'],
         ]);
+
+        // Handle KYC File Uploads
+        $idPhotoPath = $request->file('id_photo')->store('kyc/ids', 'public');
+        $personalPhotoPath = $request->file('personal_photo')->store('kyc/personal', 'public');
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'id_number' => $request->id_number,
+            'id_photo' => $idPhotoPath,
+            'personal_photo' => $personalPhotoPath,
+            'status' => 'pending',
         ]);
 
         event(new Registered($user));
@@ -50,6 +61,10 @@ class RegisteredUserController extends Controller
         $token = \Illuminate\Support\Str::uuid()->toString();
         $user->device_token = $token;
         $user->save();
+        
+        // Initialize Wallet
+        $user->wallet()->create(['balance' => 0]);
+
         \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forever('device_lock', $token));
 
         Auth::login($user);

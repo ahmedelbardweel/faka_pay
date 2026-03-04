@@ -26,16 +26,27 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('users', 'stats', 'recentTransactions'));
     }
 
-    public function resetDevice(\App\Models\User $user)
+    public function approveUser(\App\Models\User $user)
     {
-        // Only allow admins
         if (!auth()->user()->is_admin) {
             abort(403, 'Unauthorized');
         }
 
-        $user->device_token = null;
+        $user->status = 'approved';
         $user->save();
 
-        return redirect()->back()->with('status', 'Device reset successfully for ' . $user->name);
+        return redirect()->back()->with('status', 'User ' . $user->name . ' has been approved.');
+    }
+
+    public function rejectUser(\App\Models\User $user)
+    {
+        if (!auth()->user()->is_admin) {
+            abort(403, 'Unauthorized');
+        }
+
+        $user->status = 'rejected';
+        $user->save();
+
+        return redirect()->back()->with('status', 'User ' . $user->name . ' has been rejected.');
     }
 }

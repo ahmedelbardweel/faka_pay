@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
     // Admin Routes
     Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/users/{user}/reset', [\App\Http\Controllers\AdminController::class, 'resetDevice'])->name('admin.device.reset');
+    Route::post('/admin/users/{user}/approve', [\App\Http\Controllers\AdminController::class, 'approveUser'])->name('admin.users.approve');
+    Route::post('/admin/users/{user}/reject', [\App\Http\Controllers\AdminController::class, 'rejectUser'])->name('admin.users.reject');
 });
 
 require __DIR__.'/auth.php';

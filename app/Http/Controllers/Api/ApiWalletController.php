@@ -26,6 +26,7 @@ class ApiWalletController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
+                'iban' => $wallet->iban,
                 'balance' => $wallet->balance,
                 'transactions' => $transactions
             ]

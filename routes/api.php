@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [\App\Http\Controllers\Api\ApiAuthController::class, 'logout']);
     
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        return $request->user()->load('wallet');
     });
 
     // OTP & Notifications

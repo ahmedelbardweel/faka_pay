@@ -22,6 +22,10 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'id_number',
+        'id_photo',
+        'personal_photo',
+        'status', // pending, approved, rejected
     ];
 
     /**
