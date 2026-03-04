@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
 
         <!-- Name -->
@@ -21,6 +21,27 @@
             <x-input-label for="phone" :value="__('Phone Number')" />
             <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required autocomplete="tel" />
             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+        </div>
+
+        <!-- ID Number -->
+        <div class="mt-4">
+            <x-input-label for="id_number" :value="__('ID / Passport Number')" />
+            <x-text-input id="id_number" class="block mt-1 w-full" type="text" name="id_number" :value="old('id_number')" required />
+            <x-input-error :messages="$errors->get('id_number')" class="mt-2" />
+        </div>
+
+        <!-- ID Photo -->
+        <div class="mt-4">
+            <x-input-label for="id_photo" :value="__('ID / Passport Photo')" />
+            <input id="id_photo" class="block mt-1 w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" type="file" name="id_photo" required />
+            <x-input-error :messages="$errors->get('id_photo')" class="mt-2" />
+        </div>
+
+        <!-- Personal Photo -->
+        <div class="mt-4">
+            <x-input-label for="personal_photo" :value="__('Personal Photo (Selfie)')" />
+            <input id="personal_photo" class="block mt-1 w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" type="file" name="personal_photo" required />
+            <x-input-error :messages="$errors->get('personal_photo')" class="mt-2" />
         </div>
 
         <!-- Password -->
