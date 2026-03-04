@@ -32,10 +32,13 @@ Route::get('/create-admin', function () {
     return "Admin user setup completed for: " . $user->email . ". You can now login with password: 'password'";
 });
 
-Route::middleware(['auth', 'verified', 'account_status'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+});
+
+Route::middleware(['auth', 'verified', 'account_status'])->group(function () {
 
     // OTP Routes
     Route::get('/otp/verify', [\App\Http\Controllers\OtpWebController::class, 'showVerifyForm'])->name('otp.verify.web');

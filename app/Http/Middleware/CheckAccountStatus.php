@@ -23,9 +23,9 @@ class CheckAccountStatus
                 ], 403);
             }
 
-            // For web, if they are not approved, they shouldn't be able to access wallet etc.
-            // We can redirect them back with a message or to a custom "pending" view
-            return redirect()->route('dashboard')->with('error', 'Your account is pending admin approval.');
+            // For web, we simply don't let them pass to sensitive routes.
+            // If they are on a protected route, we redirect them to the dashboard where they see the status message.
+            return redirect()->route('dashboard')->with('error', 'Access denied. Your account is pending admin approval.');
         }
 
         return $next($request);
